@@ -6,6 +6,22 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "ClimateCrisisKR-1979";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/ClimateCrisisKR-1979.woff2")
+        format("woff2");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "SUIT-Regular";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2")
+        format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     font-family: "Pretendard-Regular";
