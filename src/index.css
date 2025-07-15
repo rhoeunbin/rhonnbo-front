@@ -7,10 +7,10 @@
 }
 
 @font-face {
-    font-family: "ClimateCrisisKR-1979";
-    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2212@1.0/ClimateCrisisKR-1979.woff2")
+    font-family: "BagelFatOne-Regular";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_JAMO@1.0/BagelFatOne-Regular.woff2")
         format("woff2");
-    font-weight: 500;
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -24,6 +24,8 @@
 
 body {
     margin: 0;
+    min-width: 1200px;
+    /* min-width: 1440px; */
     font-family: "Pretendard-Regular";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
