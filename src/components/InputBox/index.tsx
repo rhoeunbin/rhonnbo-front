@@ -14,7 +14,7 @@ interface Props {
     type: "text" | "password";
     placeholder: string;
     value: string;
-    setValue: Dispatch<SetStateAction<string>>;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     error: boolean;
 
     icon?:
@@ -32,13 +32,7 @@ interface Props {
 const InputBox = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {
     //          state: properties           //
     const { label, type, placeholder, value, error, icon, message } = props;
-    const { setValue, onButtonClick, onKeyDown } = props;
-
-    //          event handler : input 값 변경 이벤트 처리 함수          //
-    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target;
-        setValue(value);
-    };
+    const { onChange, onButtonClick, onKeyDown } = props;
 
     //          event handler : input키 이벤트 처리 함수          //
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -61,7 +55,7 @@ const InputBox = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {
                     className="input"
                     placeholder={placeholder}
                     value={value}
-                    onChange={onChangeHandler}
+                    onChange={onChange}
                     onKeyDown={onKeyDownHandler}
                 />
                 {onButtonClick !== undefined && (
