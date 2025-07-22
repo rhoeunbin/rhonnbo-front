@@ -17,7 +17,10 @@ interface Props {
     setValue: Dispatch<SetStateAction<string>>;
     error: boolean;
 
-    icon?: string; // 필수가 아님
+    icon?:
+        | "eye-light-off-icon"
+        | "eye-light-on-icon"
+        | "expand-right-light-icon"; // 필수가 아님
     onButtonClick?: () => void;
 
     message?: string;
@@ -62,8 +65,8 @@ const InputBox = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {
                     onKeyDown={onKeyDownHandler}
                 />
                 {onButtonClick !== undefined && (
-                    <div className="icon-button">
-                        {icon! == undefined && (
+                    <div className="icon-button" onClick={onButtonClick}>
+                        {icon !== undefined && (
                             <div className={`icon ${icon}`}></div>
                         )}
                     </div>
