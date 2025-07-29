@@ -30,7 +30,7 @@ export default function Header() {
     const { pathname } = useLocation();
 
     //      state : cookie 상태     //
-    //const [cookies, setCookie] = useCookies();
+    const [cookies, setCookie] = useCookies();
 
     //      state : 로그인 상태     //
     const [isLogin, setLogin] = useState<boolean>(false);
@@ -159,6 +159,10 @@ export default function Header() {
         //      event handler : 로그아웃 버튼 클릭 이벤트 처리 함수       //
         const onSignOutButtonClickHandler = () => {
             resetLoginUser();
+            setCookie("accessToken", "", {
+                path: MAIN_PATH(),
+                expires: new Date(),
+            });
             navigate(MAIN_PATH());
         };
 
@@ -252,6 +256,11 @@ export default function Header() {
         setUserPage(isUserPage);
         console.log(BOARD_PATH() + "/" + BOARD_CREATE_PATH());
     }, [pathname]);
+
+    //      effect : 로그인 유저가 변경될 때마다 실행될 함수        //
+    useEffect(() => {
+        setLogin(loginUser !== null);
+    }, [loginUser]);
 
     //      render : Header layout 렌더링        //
     return (
