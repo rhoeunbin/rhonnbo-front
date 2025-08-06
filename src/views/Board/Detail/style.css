@@ -6,7 +6,7 @@
 }
 
 .board-detail-container {
-    width: 900px;
+    width: 800px;
 
     display: flex;
     flex-direction: column;
