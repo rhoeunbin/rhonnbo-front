@@ -19,7 +19,7 @@ import { BOARD_UPDATE_PATH } from "constant";
 import { BOARD_DETAIL_PATH } from "constant";
 import { useCookies } from "react-cookie";
 import { useLoginUserStore } from "stores";
-import { GetSignInUserRequest } from "apis";
+import { getSignInUserRequest } from "apis";
 import { GetSignInUserResponseDto } from "apis/response/user";
 import { User } from "types/interface";
 import ResponseDto from "apis/response/response.dto";
@@ -52,7 +52,7 @@ function App() {
     useEffect(() => {
         if (!cookies.accessToken) {
         }
-        GetSignInUserRequest(cookies.accessToken).then(getSignInUserResponse);
+        getSignInUserRequest(cookies.accessToken).then(getSignInUserResponse);
     }, [cookies.accessToken]);
 
     //          render: Application 컴포넌트 렌더링           //
