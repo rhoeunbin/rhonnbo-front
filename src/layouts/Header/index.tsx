@@ -20,43 +20,37 @@ import {
 import { useCookies } from "react-cookie";
 import { useBoardStore, useLoginUserStore } from "stores";
 import path from "path";
-import { fileUploadRequest, postBoardRequest } from "apis";
-import { PostBoardRequestDto } from "apis/request/board";
-import { PostBoardResponseDto } from "apis/response/board";
+import { fileUploadRequest, patchBoardRequest, postBoardRequest } from "apis";
+import { PatchBoardRequestDto, PostBoardRequestDto } from "apis/request/board";
+import {
+    PatchBoardResponseDto,
+    PostBoardResponseDto,
+} from "apis/response/board";
 import ResponseDto from "apis/response/response.dto";
 
 //      component : Header layout           //
 export default function Header() {
     //      state : 로그인 유저 상태     //
     const { loginUser, setLoginUser, resetLoginUser } = useLoginUserStore();
-
     //      state : path 상태     //
     const { pathname } = useLocation();
-
     //      state : cookie 상태     //
     const [cookies, setCookie] = useCookies();
 
     //      state : 로그인 상태     //
     const [isLogin, setLogin] = useState<boolean>(false);
-
     //      state : 인증 페이지 상태     //
     const [isAuthPage, setAuthPage] = useState<boolean>(false);
-
     //      state : 메인 페이지 상태     //
     const [isMainPage, setMainPage] = useState<boolean>(false);
-
     //      state : 검색 상태     //
     const [isSearchPage, setSearchPage] = useState<boolean>(false);
-
     //      state : 게시물 상세 페이지 상태     //
     const [isBoardDetailPage, setBoardDetailPage] = useState<boolean>(false);
-
     //      state : 게시물 작성 페이지 상태     //
     const [isBoardCreatePage, setBoardCreatePage] = useState<boolean>(false);
-
     //      state : 게시물 수정 페이지 상태     //
     const [isBoardUpdatePage, setBoardUpdatePage] = useState<boolean>(false);
-
     //      state : 유저 페이지 상태     //
     const [isUserPage, setUserPage] = useState<boolean>(false);
 
@@ -207,6 +201,8 @@ export default function Header() {
 
     //      component : 업로드 버튼 컴포넌트        //
     const UploadButton = () => {
+        //      state : 게시물 번호 path variable 상태      //
+        const { boardNumber } = useParams();
         //      state : 게시물 상태     //
         const { title, content, boardImageFileList, resetBoard } =
             useBoardStore();
@@ -228,6 +224,27 @@ export default function Header() {
             navigate(USER_PATH(email));
         };
 
+        //      function : patch board response 처리 함수       //
+        const patchBoardResponse = (
+            responseBody: PatchBoardResponseDto | ResponseDto | null
+        ) => {
+            if (!responseBody) return;
+            const { code } = responseBody;
+            if (code === "DBE") alert("데이터 베이스 오류입니다.");
+            if (
+                code === "AF" ||
+                code === "NU" ||
+                code === "NB" ||
+                code === "NP"
+            )
+                navigate(AUTH_PATH());
+            if (code === "VF") alert("제목과 내용은 필수입니다.");
+            if (code !== "SU") return;
+
+            if (!boardNumber) return;
+            navigate(BOARD_PATH() + "/" + BOARD_DETAIL_PATH(boardNumber));
+        };
+
         //      event handler : 업로드 버튼 클릭 이벤트 처리 함수       //
         const onUploadButtonClickHandler = async () => {
             const accessToken = cookies.accessToken;
@@ -242,12 +259,29 @@ export default function Header() {
                 const url = await fileUploadRequest(data);
                 if (url) boardImageList.push(url);
             }
-            const requestBody: PostBoardRequestDto = {
-                title,
-                content,
-                boardImageList,
-            };
-            postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+
+            const isWriterPage =
+                pathname === BOARD_PATH() + "/" + BOARD_CREATE_PATH();
+            if (isWriterPage) {
+                const requestBody: PostBoardRequestDto = {
+                    title,
+                    content,
+                    boardImageList,
+                };
+                postBoardRequest(requestBody, accessToken).then(
+                    postBoardResponse
+                );
+            } else {
+                if (!boardNumber) return;
+                const requestBody: PatchBoardRequestDto = {
+                    title,
+                    content,
+                    boardImageList,
+                };
+                patchBoardRequest(boardNumber, requestBody, accessToken).then(
+                    patchBoardResponse
+                );
+            }
         };
 
         //      render : 업로드 버튼 컴포넌트 렌더링        //
@@ -292,7 +326,6 @@ export default function Header() {
 
         const isUserPage = pathname.startsWith(USER_PATH(""));
         setUserPage(isUserPage);
-        console.log(BOARD_PATH() + "/" + BOARD_CREATE_PATH());
     }, [pathname]);
 
     //      effect : 로그인 유저가 변경될 때마다 실행될 함수        //
