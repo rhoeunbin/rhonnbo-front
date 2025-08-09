@@ -6,7 +6,7 @@ import Authentication from "views/Authentication";
 import Search from "views/Search";
 import UserV from "views/User";
 import BoardCreate from "views/Board/Create";
-import Boardupdate from "views/Board/Update";
+import BoardUpdate from "views/Board/Update";
 import BoardDetail from "views/Board/Detail";
 import Container from "layouts/Container";
 import { MAIN_PATH } from "constant";
@@ -81,7 +81,7 @@ function App() {
                     />
                     <Route
                         path={BOARD_UPDATE_PATH(":boardNumber")}
-                        element={<Boardupdate />}
+                        element={<BoardUpdate />}
                     />
                 </Route>
                 <Route path="*" element={<h1>404 not found</h1>} />

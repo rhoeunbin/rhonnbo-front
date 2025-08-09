@@ -4,10 +4,15 @@ import { SignInResponseDto, SignUpResponseDto } from "./response/auth";
 import ResponseDto from "./response/response.dto";
 import { error } from "console";
 import { GetSignInUserResponseDto } from "./response/user";
-import { PostCommentRequestDto, PostBoardRequestDto } from "./request/board";
+import {
+    PostCommentRequestDto,
+    PostBoardRequestDto,
+    PatchBoardRequestDto,
+} from "./request/board";
 import {
     PostBoardResponseDto,
     GetBoardResponseDto,
+    PatchBoardResponseDto,
     DeleteBoardResponseDto,
     PostCommentResponseDto,
     GetCommentListResponseDto,
@@ -61,6 +66,8 @@ export const signUpRequest = async (requestBody: SignUpRequestDto) => {
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 const GET_BOARD_URL = (boardNumber: number | string) =>
     `${API_DOMAIN}/board/${boardNumber}`;
+const PATCH_BOARD_URL = (boardNumber: number | string) =>
+    `${API_DOMAIN}/board/${boardNumber}`;
 const DELETE_BOARD_URL = (boardNumber: number | string) =>
     `${API_DOMAIN}/board/${boardNumber}`;
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) =>
@@ -97,6 +104,29 @@ export const getBoardRequest = async (boardNumber: number | string) => {
         .get(GET_BOARD_URL(boardNumber))
         .then((response) => {
             const responseBody: GetBoardResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchBoardRequest = async (
+    boardNumber: number | string,
+    requestBody: PatchBoardRequestDto,
+    accessToken: string
+) => {
+    const result = await axios
+        .patch(
+            PATCH_BOARD_URL(boardNumber),
+            requestBody,
+            authorization(accessToken)
+        )
+        .then((response) => {
+            const responseBody: PatchBoardResponseDto = response.data;
             return responseBody;
         })
         .catch((error) => {
