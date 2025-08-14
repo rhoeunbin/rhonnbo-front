@@ -19,7 +19,10 @@ import {
     PutFavoriteResponseDto,
     GetFavoriteListResponseDto,
     IncreaseViewCountResponseDto,
+    GetLatestBoardListResponseDto,
+    GetTop3BoardListResponseDto,
 } from "./response/board";
+import { GetPopularListResponseDto } from "./response/search";
 
 const DOMAIN = "http://localhost:4000";
 
@@ -80,6 +83,8 @@ const GET_COMMENT_LIST_URL = (boardNumber: number | string) =>
     `${API_DOMAIN}/board/${boardNumber}/comment-list`;
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) =>
     `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
+const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
+const GET_TOP3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top3-list`;
 
 export const postBoardRequest = async (
     requestBody: PostBoardRequestDto,
@@ -226,6 +231,23 @@ export const getCommentListRequest = async (boardNumber: number | string) => {
     return result;
 };
 
+const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+
+export const getPopularListRequest = async () => {
+    const result = await axios
+        .get(GET_POPULAR_LIST_URL())
+        .then((response) => {
+            const responseBody: GetPopularListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
 
 export const getSignInUserRequest = async (accessToken: string) => {
@@ -271,6 +293,36 @@ export const increaseViewCountResquest = async (
         .get(INCREASE_VIEW_COUNT_URL(boardNumber))
         .then((response) => {
             const responseBody: IncreaseViewCountResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const getLatestBoardListRequest = async () => {
+    const result = await axios
+        .get(GET_LATEST_BOARD_LIST_URL())
+        .then((response) => {
+            const responseBody: GetLatestBoardListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const getTop3BoardListResquest = async () => {
+    const result = await axios
+        .get(GET_TOP3_BOARD_LIST_URL())
+        .then((response) => {
+            const responseBody: GetTop3BoardListResponseDto = response.data;
             return responseBody;
         })
         .catch((error) => {
