@@ -232,12 +232,29 @@ export const getCommentListRequest = async (boardNumber: number | string) => {
 };
 
 const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+const GET_SEARCH_BOARD_LIST_URL = (searchWord: string) =>
+    `${API_DOMAIN}/board/search-list/${searchWord}`;
 
 export const getPopularListRequest = async () => {
     const result = await axios
         .get(GET_POPULAR_LIST_URL())
         .then((response) => {
             const responseBody: GetPopularListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const getSearchBoardListRequest = async (searchWord: string) => {
+    const result = await axios
+        .get(GET_SEARCH_BOARD_LIST_URL(searchWord))
+        .then((response) => {
+            const responseBody: GetLatestBoardListResponseDto = response.data;
             return responseBody;
         })
         .catch((error) => {

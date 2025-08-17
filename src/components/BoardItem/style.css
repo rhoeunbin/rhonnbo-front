@@ -1,7 +1,7 @@
 .board-list-item {
     padding: 24px;
 
-    background-color: rbga(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 1);
 
     display: flex;
     align-items: center;
