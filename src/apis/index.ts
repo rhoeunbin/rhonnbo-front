@@ -3,7 +3,12 @@ import { SignInRequestDto, SignUpRequestDto } from "./request/auth";
 import { SignInResponseDto, SignUpResponseDto } from "./response/auth";
 import ResponseDto from "./response/response.dto";
 import { error } from "console";
-import { GetSignInUserResponseDto } from "./response/user";
+import {
+    GetSignInUserResponseDto,
+    GetUserResponseDto,
+    PatchNicknameResponseDto,
+    PatchProfileImageResponseDto,
+} from "./response/user";
 import {
     PostCommentRequestDto,
     PostBoardRequestDto,
@@ -22,11 +27,16 @@ import {
     GetLatestBoardListResponseDto,
     GetTop3BoardListResponseDto,
     GetSearchBoardListResponseDto,
+    GetUserBoardListResponseDto,
 } from "./response/board";
 import {
     GetPopularListResponseDto,
     GetRelationListResponseDto,
 } from "./response/search";
+import {
+    PatchNicknameRequestDto,
+    PatchProfileImageRequestDto,
+} from "./request/user";
 
 const DOMAIN = "http://localhost:4000";
 
@@ -96,6 +106,8 @@ const GET_SEARCH_BOARD_LIST_URL = (
     `${API_DOMAIN}/board/search-list/${searchWord}${
         preSearchWord ? "/" + preSearchWord : ""
     }`;
+const GET_USER_BOARD_LIST_URL = (email: string) =>
+    `${API_DOMAIN}/board/user-board-list/${email}`;
 
 export const postBoardRequest = async (
     requestBody: PostBoardRequestDto,
@@ -276,13 +288,71 @@ export const getRelationListRequest = async (searchWord: string) => {
     return result;
 };
 
+const GET_USER_URL = (email: string) => `${API_DOMAIN}/user/${email}`;
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
+const PATCH_NICKNAME_URL = () => `${API_DOMAIN}/user/nickname`;
+const PATCH_PROFILE_IMAGE_URL = () => `${API_DOMAIN}/user/profile-image`;
+
+export const getUserRequest = async (email: string) => {
+    const result = await axios
+        .get(GET_USER_URL(email))
+        .then((response) => {
+            const responseBody: GetUserResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
 
 export const getSignInUserRequest = async (accessToken: string) => {
     const result = await axios
         .get(GET_SIGN_IN_USER_URL(), authorization(accessToken))
         .then((response) => {
             const responseBody: GetSignInUserResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchNicknameRequest = async (
+    requestBody: PatchNicknameRequestDto,
+    accessToken: string
+) => {
+    const result = await axios
+        .patch(PATCH_NICKNAME_URL(), requestBody, authorization(accessToken))
+        .then((response) => {
+            const responseBody: PatchNicknameResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const patchProfileImageRequest = async (
+    requestBody: PatchProfileImageRequestDto,
+    accessToken: string
+) => {
+    const result = await axios
+        .patch(
+            PATCH_PROFILE_IMAGE_URL(),
+            requestBody,
+            authorization(accessToken)
+        )
+        .then((response) => {
+            const responseBody: PatchProfileImageResponseDto = response.data;
             return responseBody;
         })
         .catch((error) => {
@@ -369,6 +439,21 @@ export const getSearchBoardListRequest = async (
         .get(GET_SEARCH_BOARD_LIST_URL(searchWord, preSearchWord))
         .then((response) => {
             const responseBody: GetSearchBoardListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch((error) => {
+            if (!error.response) return null;
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
+
+export const getUserBoardListRequest = async (email: string) => {
+    const result = await axios
+        .get(GET_USER_BOARD_LIST_URL(email))
+        .then((response) => {
+            const responseBody: GetUserBoardListResponseDto = response.data;
             return responseBody;
         })
         .catch((error) => {
